@@ -12,8 +12,8 @@ app = FastAPI()
 config = ServerConfig()
 
 # Get configuration values from the instance
-BASE_URL = config.base_url
-API_KEY = config.api_key
+API_KEY = "2T5P1F3YSOVKJBLD"
+BASE_URL = "https://www.alphavantage.co/query"
 VALID_INTERVALS = ["1min", "5min", "15min", "30min", "60min"]
 # Apply CORS settings using the config
 app.add_middleware(
