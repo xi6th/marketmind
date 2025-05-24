@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  fastapi-app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - API_KEY=2T5P1F3YSOVKJBLD  # You can override here or set via .env file
+    restart: unless-stopped

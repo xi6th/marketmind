@@ -3,12 +3,31 @@ from fastapi.responses import JSONResponse
 import requests
 import pandas as pd
 
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 API_KEY = "2T5P1F3YSOVKJBLD"
 BASE_URL = "https://www.alphavantage.co/query"
 VALID_INTERVALS = ["1min", "5min", "15min", "30min", "60min"]
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+allowed_origins = [
+    "http://localhost:4000",
+    "http://localhost:3500",
+    "https://marketmind-ezjx.onrender.com",
+    "https://getmarketmind.com"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def fetch_from_alpha_vantage(params: dict):
     params["apikey"] = API_KEY
