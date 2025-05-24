@@ -2,31 +2,23 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
 import requests
 import pandas as pd
-
 from fastapi.middleware.cors import CORSMiddleware
+from config_setup import ServerConfig
+
+# Create FastAPI app
 app = FastAPI()
 
-API_KEY = "2T5P1F3YSOVKJBLD"
-BASE_URL = "https://www.alphavantage.co/query"
+# Create config instance
+config = ServerConfig()
+
+# Get configuration values from the instance
+BASE_URL = config.base_url
+API_KEY = config.api_key
 VALID_INTERVALS = ["1min", "5min", "15min", "30min", "60min"]
-
-from fastapi.middleware.cors import CORSMiddleware
-
-app = FastAPI()
-
-allowed_origins = [
-    "http://localhost:4000",
-    "http://localhost:3500",
-    "https://marketmind-ezjx.onrender.com",
-    "https://getmarketmind.com"
-]
-
+# Apply CORS settings using the config
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    **config.cors()
 )
 
 def fetch_from_alpha_vantage(params: dict):
@@ -110,15 +102,15 @@ def get_global_quote(symbol: str):
         quote = data[quote_key]
         return {
             "symbol": symbol.upper(),
-            "price": float(quote["05. price"]),
-            "open": float(quote["02. open"]),
-            "high": float(quote["03. high"]),
-            "low": float(quote["04. low"]),
-            "volume": int(quote["06. volume"]),
-            "latest_trading_day": quote["07. latest trading day"],
-            "previous_close": float(quote["08. previous close"]),
-            "change": float(quote["09. change"]),
-            "change_percent": quote["10. change percent"]
+            "price": float(quote),
+            "open": float(quote),
+            "high": float(quote),
+            "low": float(quote),
+            "volume": int(quote),
+            "latest_trading_day": quote,
+            "previous_close": float(quote),
+            "change": float(quote),
+            "change_percent": quote
         }
     except (KeyError, ValueError) as e:
         raise HTTPException(status_code=500, detail=f"Error processing quote data: {str(e)}")
